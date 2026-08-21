@@ -1,0 +1,88 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --background: 0 0% 100%;
+    --foreground: 240 10% 3.9%;
+    --card: 0 0% 100%;
+    --card-foreground: 240 10% 3.9%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 240 10% 3.9%;
+    --primary: 240 5.9% 10%;
+    --primary-foreground: 0 0% 98%;
+    --secondary: 240 4.8% 95.9%;
+    --secondary-foreground: 240 5.9% 10%;
+    --muted: 240 4.8% 95.9%;
+    --muted-foreground: 240 3.8% 46.1%;
+    --accent: 240 4.8% 95.9%;
+    --accent-foreground: 240 5.9% 10%;
+    --destructive: 0 84.2% 60.2%;
+    --destructive-foreground: 0 0% 98%;
+    --border: 240 5.9% 90%;
+    --input: 240 5.9% 90%;
+    --ring: 240 5.9% 10%;
+    --radius: 0.625rem;
+  }
+
+  .dark {
+    --background: 240 10% 3.9%;
+    --foreground: 0 0% 98%;
+    --card: 240 10% 3.9%;
+    --card-foreground: 0 0% 98%;
+    --popover: 240 10% 3.9%;
+    --popover-foreground: 0 0% 98%;
+    --primary: 0 0% 98%;
+    --primary-foreground: 240 5.9% 10%;
+    --secondary: 240 3.7% 15.9%;
+    --secondary-foreground: 0 0% 98%;
+    --muted: 240 3.7% 15.9%;
+    --muted-foreground: 240 5% 64.9%;
+    --accent: 240 3.7% 15.9%;
+    --accent-foreground: 0 0% 98%;
+    --destructive: 0 62.8% 30.6%;
+    --destructive-foreground: 0 0% 98%;
+    --border: 240 3.7% 15.9%;
+    --input: 240 3.7% 15.9%;
+    --ring: 240 4.9% 83.9%;
+  }
+}
+
+@layer base {
+  * {
+    border-color: hsl(var(--border));
+  }
+  body {
+    background-color: hsl(var(--background));
+    color: hsl(var(--foreground));
+    font-feature-settings: "rlig" 1, "calt" 1;
+  }
+}
+
+/* Wiki prose styles */
+.prose-wiki {
+  color: hsl(var(--foreground));
+  line-height: 1.75;
+  font-size: 0.95rem;
+}
+.prose-wiki h1 { font-size: 1.6rem; font-weight: 700; margin: 1.5em 0 0.6em; padding-bottom: 0.3em; border-bottom: 1px solid hsl(var(--border)); }
+.prose-wiki h2 { font-size: 1.3rem; font-weight: 600; margin: 1.4em 0 0.5em; }
+.prose-wiki h3 { font-size: 1.1rem; font-weight: 600; margin: 1.2em 0 0.4em; }
+.prose-wiki h4 { font-size: 1rem; font-weight: 600; margin: 1em 0 0.3em; }
+.prose-wiki p { margin: 0.7em 0; }
+.prose-wiki ul, .prose-wiki ol { margin: 0.6em 0; padding-left: 1.5em; }
+.prose-wiki ul { list-style: disc; }
+.prose-wiki ol { list-style: decimal; }
+.prose-wiki li { margin: 0.3em 0; }
+.prose-wiki blockquote { border-left: 3px solid hsl(var(--primary)); padding: 0.4em 1em; margin: 1em 0; background: hsl(var(--muted)); border-radius: 0 0.375rem 0.375rem 0; color: hsl(var(--muted-foreground)); }
+.prose-wiki code { background: hsl(var(--muted)); padding: 0.15em 0.35em; border-radius: 0.25em; font-size: 0.88em; font-family: ui-monospace, SFMono-Regular, "SF Mono", Menlo, monospace; }
+.prose-wiki pre { background: hsl(var(--muted)); padding: 1em; border-radius: 0.5rem; overflow-x: auto; margin: 1em 0; }
+.prose-wiki pre code { background: none; padding: 0; }
+.prose-wiki table { width: 100%; border-collapse: collapse; margin: 1em 0; font-size: 0.9em; }
+.prose-wiki th, .prose-wiki td { border: 1px solid hsl(var(--border)); padding: 0.5em 0.75em; text-align: left; }
+.prose-wiki th { background: hsl(var(--muted)); font-weight: 600; }
+.prose-wiki a { color: hsl(221 83% 53%); text-decoration: underline; text-underline-offset: 2px; }
+.prose-wiki hr { border: none; border-top: 1px solid hsl(var(--border)); margin: 1.5em 0; }
+.prose-wiki strong { font-weight: 600; }
+.prose-wiki img { max-width: 100%; border-radius: 0.5rem; }
