@@ -1,0 +1,422 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI 产品经理学习助手 - 交互式学习平台</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', sans-serif; background: #0f172a; color: #e2e8f0; line-height: 1.6; }
+  .container { max-width: 1100px; margin: 0 auto; padding: 0 24px; }
+
+  /* Hero */
+  .hero { text-align: center; padding: 80px 0 60px; background: linear-gradient(135deg, #1e293b 0%, #0f172a 50%, #1e1b4b 100%); }
+  .hero-badge { display: inline-block; padding: 6px 16px; background: rgba(99,102,241,0.15); border: 1px solid rgba(99,102,241,0.3); border-radius: 20px; font-size: 13px; color: #a5b4fc; margin-bottom: 20px; }
+  .hero h1 { font-size: 42px; font-weight: 800; margin-bottom: 16px; background: linear-gradient(135deg, #818cf8, #c084fc, #f472b6); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+  .hero p { font-size: 18px; color: #94a3b8; max-width: 640px; margin: 0 auto 32px; }
+  .hero-stats { display: flex; justify-content: center; gap: 40px; flex-wrap: wrap; }
+  .stat { text-align: center; }
+  .stat-num { font-size: 32px; font-weight: 800; color: #818cf8; }
+  .stat-label { font-size: 13px; color: #64748b; margin-top: 4px; }
+
+  /* Tabs */
+  .tabs-section { padding: 40px 0 60px; }
+  .tabs { display: flex; gap: 8px; margin-bottom: 32px; flex-wrap: wrap; justify-content: center; }
+  .tab { padding: 10px 20px; border-radius: 10px; cursor: pointer; font-size: 14px; font-weight: 600; transition: all 0.2s; border: 1px solid #334155; background: #1e293b; color: #94a3b8; }
+  .tab:hover { border-color: #6366f1; color: #c7d2fe; }
+  .tab.active { background: linear-gradient(135deg, #6366f1, #8b5cf6); border-color: transparent; color: white; }
+
+  .tab-content { display: none; animation: fadeIn 0.3s; }
+  .tab-content.active { display: block; }
+  @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+  /* Cards */
+  .card { background: #1e293b; border: 1px solid #334155; border-radius: 16px; padding: 28px; margin-bottom: 20px; }
+  .card h3 { font-size: 20px; margin-bottom: 12px; color: #f1f5f9; }
+  .card p { color: #94a3b8; font-size: 14px; }
+
+  /* Study Plan */
+  .plan-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 12px; }
+  .week-card { background: #0f172a; border: 1px solid #334155; border-radius: 12px; padding: 16px; text-align: center; transition: all 0.2s; }
+  .week-card:hover { border-color: #6366f1; transform: translateY(-2px); }
+  .week-num { font-size: 24px; font-weight: 800; color: #818cf8; }
+  .week-title { font-size: 12px; color: #94a3b8; margin-top: 6px; }
+  .week-phase { font-size: 11px; color: #64748b; margin-top: 4px; }
+
+  /* Interview Questions */
+  .q-list { display: flex; flex-direction: column; gap: 12px; }
+  .q-item { background: #0f172a; border: 1px solid #334155; border-radius: 12px; padding: 18px 20px; cursor: pointer; transition: all 0.2s; }
+  .q-item:hover { border-color: #6366f1; }
+  .q-header { display: flex; justify-content: space-between; align-items: center; }
+  .q-text { font-size: 15px; font-weight: 600; color: #e2e8f0; }
+  .q-cat { font-size: 11px; padding: 3px 10px; border-radius: 10px; background: rgba(99,102,241,0.15); color: #a5b4fc; }
+  .q-answer { display: none; margin-top: 14px; padding-top: 14px; border-top: 1px solid #334155; font-size: 13px; color: #94a3b8; line-height: 1.8; }
+  .q-item.open .q-answer { display: block; }
+  .q-item.open { border-color: #6366f1; }
+
+  /* Self Assessment */
+  .quiz-container { max-width: 700px; margin: 0 auto; }
+  .quiz-q { font-size: 16px; font-weight: 600; margin-bottom: 20px; color: #f1f5f9; }
+  .quiz-options { display: flex; flex-direction: column; gap: 10px; }
+  .quiz-opt { padding: 14px 18px; background: #0f172a; border: 1px solid #334155; border-radius: 10px; cursor: pointer; font-size: 14px; transition: all 0.2s; }
+  .quiz-opt:hover { border-color: #6366f1; }
+  .quiz-opt.selected { border-color: #8b5cf6; background: rgba(139,92,246,0.1); }
+  .quiz-opt.correct { border-color: #22c55e; background: rgba(34,197,94,0.1); }
+  .quiz-opt.wrong { border-color: #ef4444; background: rgba(239,68,68,0.1); }
+  .quiz-nav { display: flex; justify-content: space-between; margin-top: 24px; }
+  .btn { padding: 10px 24px; border-radius: 10px; border: none; cursor: pointer; font-size: 14px; font-weight: 600; transition: all 0.2s; }
+  .btn-primary { background: linear-gradient(135deg, #6366f1, #8b5cf6); color: white; }
+  .btn-primary:hover { opacity: 0.9; }
+  .btn-secondary { background: #334155; color: #e2e8f0; }
+  .btn-secondary:hover { background: #475569; }
+  .quiz-progress { height: 6px; background: #334155; border-radius: 3px; margin-bottom: 24px; overflow: hidden; }
+  .quiz-progress-bar { height: 100%; background: linear-gradient(90deg, #6366f1, #8b5cf6); transition: width 0.3s; }
+  .quiz-result { text-align: center; padding: 40px; }
+  .quiz-score { font-size: 56px; font-weight: 800; color: #818cf8; }
+  .quiz-level { font-size: 18px; color: #c4b5fd; margin-top: 8px; }
+
+  /* Knowledge Map */
+  .km-categories { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 16px; }
+  .km-cat { background: #0f172a; border: 1px solid #334155; border-radius: 12px; padding: 20px; transition: all 0.2s; }
+  .km-cat:hover { border-color: #6366f1; transform: translateY(-2px); }
+  .km-cat-icon { font-size: 28px; margin-bottom: 10px; }
+  .km-cat-name { font-size: 15px; font-weight: 700; color: #e2e8f0; margin-bottom: 6px; }
+  .km-cat-count { font-size: 12px; color: #64748b; }
+
+  /* Features */
+  .features { padding: 60px 0; background: #1e293b; }
+  .features h2 { text-align: center; font-size: 28px; margin-bottom: 40px; color: #f1f5f9; }
+  .feature-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 24px; }
+  .feature { background: #0f172a; border: 1px solid #334155; border-radius: 16px; padding: 28px; }
+  .feature-icon { width: 48px; height: 48px; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 24px; margin-bottom: 16px; }
+  .feature h3 { font-size: 17px; margin-bottom: 8px; color: #f1f5f9; }
+  .feature p { font-size: 13px; color: #94a3b8; }
+
+  /* Tech Stack */
+  .tech { padding: 60px 0; text-align: center; }
+  .tech h2 { font-size: 28px; margin-bottom: 24px; color: #f1f5f9; }
+  .tech-tags { display: flex; gap: 10px; flex-wrap: wrap; justify-content: center; }
+  .tech-tag { padding: 8px 18px; background: #1e293b; border: 1px solid #334155; border-radius: 20px; font-size: 13px; color: #94a3b8; }
+
+  /* Footer */
+  footer { text-align: center; padding: 40px 0; border-top: 1px solid #334155; color: #64748b; font-size: 13px; }
+  footer a { color: #818cf8; text-decoration: none; }
+
+  .notice { background: rgba(99,102,241,0.1); border: 1px solid rgba(99,102,241,0.3); border-radius: 12px; padding: 16px 20px; margin-bottom: 32px; font-size: 13px; color: #a5b4fc; }
+</style>
+</head>
+<body>
+
+<div class="hero">
+  <div class="container">
+    <div class="hero-badge">📚 基于 AIPM-Wiki 知识库构建</div>
+    <h1>AI 产品经理学习助手</h1>
+    <p>12 周系统学习计划 + 面试题库 + 能力自测 + 197 篇知识地图，帮助 AI 产品经理求职者高效备考</p>
+    <div class="hero-stats">
+      <div class="stat"><div class="stat-num">84</div><div class="stat-label">天学习任务</div></div>
+      <div class="stat"><div class="stat-num">20</div><div class="stat-label">道高频面试题</div></div>
+      <div class="stat"><div class="stat-num">15</div><div class="stat-label">题能力自测</div></div>
+      <div class="stat"><div class="stat-num">197</div><div class="stat-label">篇知识文档</div></div>
+    </div>
+  </div>
+</div>
+
+<div class="tabs-section">
+  <div class="container">
+    <div class="notice">💡 这是静态演示页，展示核心功能界面。完整 React 应用支持多档案、打卡追踪、数据本地存储，可在 <a href="https://github.com/Alaraby527/aipm-learning-assistant" style="color:#a5b4fc">GitHub 仓库</a> 克隆运行。</div>
+
+    <div class="tabs">
+      <div class="tab active" onclick="switchTab('plan')">📅 12周学习计划</div>
+      <div class="tab" onclick="switchTab('interview')">💬 面试题库</div>
+      <div class="tab" onclick="switchTab('quiz')">🎯 能力自测</div>
+      <div class="tab" onclick="switchTab('knowledge')">🗺️ 知识地图</div>
+    </div>
+
+    <!-- Study Plan -->
+    <div class="tab-content active" id="tab-plan">
+      <div class="card">
+        <h3>📅 12 周学习路径</h3>
+        <p style="margin-bottom:20px">8 周系统学习 + 4 周面试冲刺，循序渐进构建 AI 产品经理能力体系</p>
+        <div class="plan-grid">
+          <div class="week-card"><div class="week-num">W1</div><div class="week-title">AI基础与大模型原理</div><div class="week-phase">系统学习</div></div>
+          <div class="week-card"><div class="week-num">W2</div><div class="week-title">Prompt Engineering</div><div class="week-phase">系统学习</div></div>
+          <div class="week-card"><div class="week-num">W3</div><div class="week-title">RAG 与知识库</div><div class="week-phase">系统学习</div></div>
+          <div class="week-card"><div class="week-num">W4</div><div class="week-title">Agent 设计与工作流</div><div class="week-phase">系统学习</div></div>
+          <div class="week-card"><div class="week-num">W5</div><div class="week-title">评测体系与指标</div><div class="week-phase">系统学习</div></div>
+          <div class="week-card"><div class="week-num">W6</div><div class="week-title">产品基本功</div><div class="week-phase">系统学习</div></div>
+          <div class="week-card"><div class="week-num">W7</div><div class="week-title">数据与商业分析</div><div class="week-phase">系统学习</div></div>
+          <div class="week-card"><div class="week-num">W8</div><div class="week-title">伦理合规与风险</div><div class="week-phase">系统学习</div></div>
+          <div class="week-card"><div class="week-num">W9</div><div class="week-title">简历精修与项目梳理</div><div class="week-phase">面试冲刺</div></div>
+          <div class="week-card"><div class="week-num">W10</div><div class="week-title">高频面试题突破</div><div class="week-phase">面试冲刺</div></div>
+          <div class="week-card"><div class="week-num">W11</div><div class="week-title">模拟面试与复盘</div><div class="week-phase">面试冲刺</div></div>
+          <div class="week-card"><div class="week-num">W12</div><div class="week-title">终面准备与心态</div><div class="week-phase">面试冲刺</div></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Interview -->
+    <div class="tab-content" id="tab-interview">
+      <div class="card">
+        <h3>💬 高频面试题（点击展开参考答案）</h3>
+        <p style="margin-bottom:20px">每题含参考答案、评分要点、追问延伸和延伸阅读</p>
+        <div class="q-list">
+          <div class="q-item" onclick="this.classList.toggle('open')">
+            <div class="q-header"><span class="q-text">如何设计一个 RAG 系统的评测方案？</span><span class="q-cat">技术认知</span></div>
+            <div class="q-answer">
+              <strong>参考答案要点：</strong><br>
+              1. 分层评测：检索层（召回率、MRR、NDCG）+ 生成层（忠实度、相关性、完整性）<br>
+              2. 构建标注数据集：覆盖正确检索、错误检索、无答案等场景<br>
+              3. 自动化指标 + 人工评测结合：LLM-as-Judge 用于批量初筛，人工评测用于关键场景<br>
+              4. Bad Case 分析驱动迭代：定位是检索问题还是生成问题，针对性优化分块策略/重排序/Prompt
+            </div>
+          </div>
+          <div class="q-item" onclick="this.classList.toggle('open')">
+            <div class="q-header"><span class="q-text">大模型产品如何做成本优化？</span><span class="q-cat">商业判断</span></div>
+            <div class="q-answer">
+              <strong>参考答案要点：</strong><br>
+              1. 模型路由：简单任务用小模型，复杂任务用大模型<br>
+              2. Prompt 优化：减少冗余 token，使用更高效的指令格式<br>
+              3. 缓存策略：高频查询结果缓存，语义缓存减少重复计算<br>
+              4. 批处理与流式：非实时场景批量处理，实时场景流式输出降低感知延迟<br>
+              5. 量化与蒸馏：针对特定场景使用微调小模型替代通用大模型
+            </div>
+          </div>
+          <div class="q-item" onclick="this.classList.toggle('open')">
+            <div class="q-header"><span class="q-text">Agent 产品中如何设计人机协同机制？</span><span class="q-cat">产品设计</span></div>
+            <div class="q-answer">
+              <strong>参考答案要点：</strong><br>
+              1. 风险分级：低风险自动执行，中风险确认后执行，高风险必须人工审核<br>
+              2. 可解释性：Agent 每个决策附带推理过程和依据，让人类能判断是否可信<br>
+              3. 中断与接管：任何时刻人类可以中断 Agent 流程并接管<br>
+              4. 反馈闭环：人类的修正反馈回传给 Agent，用于持续优化<br>
+              5. 置信度阈值：Agent 置信度低于阈值时自动请求人工介入
+            </div>
+          </div>
+          <div class="q-item" onclick="this.classList.toggle('open')">
+            <div class="q-header"><span class="q-text">AI 产品如何处理幻觉问题？</span><span class="q-cat">技术认知</span></div>
+            <div class="q-answer">
+              <strong>参考答案要点：</strong><br>
+              1. 检索增强（RAG）：让模型基于检索到的事实回答，而非纯生成<br>
+              2. 约束生成：通过 Prompt 约束模型只使用提供的上下文，无依据时说"不知道"<br>
+              3. 事实校验：输出后经过事实核查模块，检测与已知事实的矛盾<br>
+              4. 置信度标注：对模型输出的每个声明标注置信度<br>
+              5. 人工兜底：高风险场景必须人工审核，自动放行率设为 0%
+            </div>
+          </div>
+          <div class="q-item" onclick="this.classList.toggle('open')">
+            <div class="q-header"><span class="q-text">作为 AI 产品经理，你如何评估一个新模型是否值得接入？</span><span class="q-cat">产品基本功</span></div>
+            <div class="q-answer">
+              <strong>参考答案要点：</strong><br>
+              1. 能力评测：在自有业务场景的测试集上对比新模型与现有模型的表现<br>
+              2. 成本分析：token 单价、推理速度、并发能力对总成本的影响<br>
+              3. 兼容性：API 格式、上下文长度、函数调用等能力是否满足需求<br>
+              4. 风险评估：数据隐私、合规性、服务稳定性、SLA 保障<br>
+              5. A/B 测试：小流量灰度验证真实业务指标提升，而非只看实验室指标
+            </div>
+          </div>
+        </div>
+        <p style="text-align:center;margin-top:20px;color:#64748b;font-size:13px">完整 20 道题含评分要点和追问延伸，请在完整应用中查看</p>
+      </div>
+    </div>
+
+    <!-- Quiz -->
+    <div class="tab-content" id="tab-quiz">
+      <div class="card">
+        <h3>🎯 五维能力自测（演示版）</h3>
+        <p style="margin-bottom:24px">覆盖技术认知、产品基本功、数据与评估、商业判断、伦理与合规五个维度</p>
+        <div class="quiz-container" id="quiz-container">
+          <div class="quiz-progress"><div class="quiz-progress-bar" id="quiz-progress" style="width:20%"></div></div>
+          <div id="quiz-body">
+            <div class="quiz-q" id="quiz-q">1. 在 RAG 系统中，以下哪个指标最适合评估检索环节的质量？</div>
+            <div class="quiz-options" id="quiz-options">
+              <div class="quiz-opt" onclick="selectOpt(this,0)">A. BLEU 分数</div>
+              <div class="quiz-opt" onclick="selectOpt(this,1)">B. MRR（平均倒数排名）</div>
+              <div class="quiz-opt" onclick="selectOpt(this,2)">C. 困惑度（Perplexity）</div>
+              <div class="quiz-opt" onclick="selectOpt(this,3)">D. 生成速度</div>
+            </div>
+            <div class="quiz-nav">
+              <button class="btn btn-secondary" onclick="prevQ()">上一题</button>
+              <button class="btn btn-primary" onclick="nextQ()">下一题</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Knowledge Map -->
+    <div class="tab-content" id="tab-knowledge">
+      <div class="card">
+        <h3>🗺️ 知识地图（197 篇文档分类）</h3>
+        <p style="margin-bottom:20px">基于 AIPM-Wiki 知识库，按知识板块分类浏览，支持文档内全文阅读</p>
+        <div class="km-categories">
+          <div class="km-cat"><div class="km-cat-icon">🧠</div><div class="km-cat-name">大模型基础</div><div class="km-cat-count">28 篇文档</div></div>
+          <div class="km-cat"><div class="km-cat-icon">✍️</div><div class="km-cat-name">Prompt Engineering</div><div class="km-cat-count">24 篇文档</div></div>
+          <div class="km-cat"><div class="km-cat-icon">📚</div><div class="km-cat-name">RAG 与知识库</div><div class="km-cat-count">31 篇文档</div></div>
+          <div class="km-cat"><div class="km-cat-icon">🤖</div><div class="km-cat-name">Agent 与工作流</div><div class="km-cat-count">26 篇文档</div></div>
+          <div class="km-cat"><div class="km-cat-icon">📊</div><div class="km-cat-name">评测与评估</div><div class="km-cat-count">19 篇文档</div></div>
+          <div class="km-cat"><div class="km-cat-icon">📋</div><div class="km-cat-name">产品方法论</div><div class="km-cat-count">22 篇文档</div></div>
+          <div class="km-cat"><div class="km-cat-icon">📈</div><div class="km-cat-name">数据与商业</div><div class="km-cat-count">17 篇文档</div></div>
+          <div class="km-cat"><div class="km-cat-icon">⚖️</div><div class="km-cat-name">伦理与合规</div><div class="km-cat-count">15 篇文档</div></div>
+          <div class="km-cat"><div class="km-cat-icon">🛠️</div><div class="km-cat-name">工具与平台</div><div class="km-cat-count">15 篇文档</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="features">
+  <div class="container">
+    <h2>✨ 核心特性</h2>
+    <div class="feature-grid">
+      <div class="feature">
+        <div class="feature-icon" style="background:rgba(99,102,241,0.15)">📅</div>
+        <h3>12 周学习计划</h3>
+        <p>8 周系统学习 + 4 周面试冲刺，共 84 天任务，支持每日打卡追踪</p>
+      </div>
+      <div class="feature">
+        <div class="feature-icon" style="background:rgba(139,92,246,0.15)">💬</div>
+        <h3>面试题库</h3>
+        <p>20 道高频面试题，每题含参考答案、评分要点、追问延伸和延伸阅读</p>
+      </div>
+      <div class="feature">
+        <div class="feature-icon" style="background:rgba(236,72,153,0.15)">🎯</div>
+        <h3>能力自测</h3>
+        <p>15 道选择题覆盖五维能力，完成后获取个性化评估报告和提升建议</p>
+      </div>
+      <div class="feature">
+        <div class="feature-icon" style="background:rgba(34,197,94,0.15)">🗺️</div>
+        <h3>知识地图</h3>
+        <p>197 篇 AIPM-Wiki 文档全文内置，按九大板块分类，支持文档内阅读</p>
+      </div>
+      <div class="feature">
+        <div class="feature-icon" style="background:rgba(245,158,11,0.15)">👥</div>
+        <h3>多档案支持</h3>
+        <p>支持创建多个学习档案，不同目标岗位可独立追踪学习进度</p>
+      </div>
+      <div class="feature">
+        <div class="feature-icon" style="background:rgba(6,182,212,0.15)">🔒</div>
+        <h3>数据本地存储</h3>
+        <p>所有学习数据保存在浏览器 localStorage，不上传服务器，支持 JSON 导出备份</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="tech">
+  <div class="container">
+    <h2>🛠️ 技术栈</h2>
+    <div class="tech-tags">
+      <span class="tech-tag">React 18</span>
+      <span class="tech-tag">TypeScript</span>
+      <span class="tech-tag">Vite</span>
+      <span class="tech-tag">React Router v7</span>
+      <span class="tech-tag">Tailwind CSS</span>
+      <span class="tech-tag">shadcn/ui</span>
+      <span class="tech-tag">Radix UI</span>
+      <span class="tech-tag">Lucide React</span>
+      <span class="tech-tag">React Context</span>
+      <span class="tech-tag">localStorage</span>
+    </div>
+  </div>
+</div>
+
+<footer>
+  <div class="container">
+    <p>AI 产品经理学习助手 | 基于 <a href="https://github.com/archlizheng/AIPM-Wiki">AIPM-Wiki</a> 知识库构建 | MIT License</p>
+    <p style="margin-top:8px"><a href="https://github.com/Alaraby527/aipm-learning-assistant">📂 GitHub 仓库</a></p>
+  </div>
+</footer>
+
+<script>
+function switchTab(name) {
+  document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+  document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+  event.target.classList.add('active');
+  document.getElementById('tab-' + name).classList.add('active');
+}
+
+// Quiz
+const quizQuestions = [
+  { q: "1. 在 RAG 系统中，以下哪个指标最适合评估检索环节的质量？", opts: ["A. BLEU 分数", "B. MRR（平均倒数排名）", "C. 困惑度（Perplexity）", "D. 生成速度"], answer: 1 },
+  { q: "2. 大模型产生幻觉的根本原因是什么？", opts: ["A. 模型参数量不足", "B. 训练数据中存在错误信息", "C. 模型是基于概率生成，不保证事实正确性", "D. 上下文窗口太小"], answer: 2 },
+  { q: "3. 在 Agent 设计中，'ReAct' 模式指的是什么？", opts: ["A. 只做推理不行动", "B. 推理和行动交替进行", "C. 先行动后推理", "D. 多 Agent 并行推理"], answer: 1 },
+  { q: "4. 以下哪项不属于 AI 产品的伦理风险？", opts: ["A. 算法偏见导致歧视", "B. 用户数据隐私泄露", "C. 页面加载速度慢", "D. 深度伪造内容传播"], answer: 2 },
+  { q: "5. 评估大模型输出质量时，'忠实度（Faithfulness）'指的是什么？", opts: ["A. 输出是否符合人类偏好", "B. 输出是否基于给定上下文且不编造信息", "C. 输出是否完整回答了问题", "D. 输出是否语言流畅"], answer: 1 }
+];
+let currentQ = 0;
+let userAnswers = [-1, -1, -1, -1, -1];
+
+function renderQuiz() {
+  const q = quizQuestions[currentQ];
+  document.getElementById('quiz-q').textContent = q.q;
+  const optsDiv = document.getElementById('quiz-options');
+  optsDiv.innerHTML = '';
+  q.opts.forEach((opt, i) => {
+    const div = document.createElement('div');
+    div.className = 'quiz-opt' + (userAnswers[currentQ] === i ? ' selected' : '');
+    div.textContent = opt;
+    div.onclick = () => selectOpt(i);
+    optsDiv.appendChild(div);
+  });
+  document.getElementById('quiz-progress').style.width = ((currentQ + 1) / quizQuestions.length * 100) + '%';
+}
+
+function selectOpt(idx) {
+  userAnswers[currentQ] = idx;
+  renderQuiz();
+}
+
+function nextQ() {
+  if (currentQ < quizQuestions.length - 1) {
+    currentQ++;
+    renderQuiz();
+  } else {
+    showResult();
+  }
+}
+
+function prevQ() {
+  if (currentQ > 0) {
+    currentQ--;
+    renderQuiz();
+  }
+}
+
+function showResult() {
+  let correct = 0;
+  quizQuestions.forEach((q, i) => { if (userAnswers[i] === q.answer) correct++; });
+  const pct = Math.round(correct / quizQuestions.length * 100);
+  let level = '';
+  if (pct >= 80) level = '🌟 优秀 - 基础扎实，建议深入实战项目';
+  else if (pct >= 60) level = '👍 良好 - 有一定基础，建议针对性补强薄弱环节';
+  else level = '📖 待提升 - 建议系统学习基础知识地图';
+
+  document.getElementById('quiz-body').innerHTML = `
+    <div class="quiz-result">
+      <div class="quiz-score">${correct}/${quizQuestions.length}</div>
+      <div class="quiz-level">${pct}% 正确率</div>
+      <p style="margin-top:16px;color:#94a3b8;font-size:14px">${level}</p>
+      <p style="margin-top:8px;color:#64748b;font-size:12px">完整应用含 15 题五维评估和个性化提升建议</p>
+      <button class="btn btn-primary" style="margin-top:24px" onclick="resetQuiz()">重新测试</button>
+    </div>
+  `;
+}
+
+function resetQuiz() {
+  currentQ = 0;
+  userAnswers = [-1, -1, -1, -1, -1];
+  document.getElementById('quiz-body').innerHTML = `
+    <div class="quiz-q" id="quiz-q"></div>
+    <div class="quiz-options" id="quiz-options"></div>
+    <div class="quiz-nav">
+      <button class="btn btn-secondary" onclick="prevQ()">上一题</button>
+      <button class="btn btn-primary" onclick="nextQ()">下一题</button>
+    </div>
+  `;
+  renderQuiz();
+}
+
+renderQuiz();
+</script>
+</body>
+</html>
