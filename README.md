@@ -1,6 +1,6 @@
 # AI 产品经理学习助手
 
-> 🟢 [在线 Demo（静态演示版）](https://alaraby527.github.io/aipm-learning-assistant/)
+> 🟢 [在线 Demo（静态演示版）]([https://alaraby527.github.io/aipm-learning-assistant/](https://dcniaqwtmoca.aiforce.cloud/app/app_17c9upcbfne))
 
 基于 [AIPM-Wiki](https://github.com/archlizheng/AIPM-Wiki) 知识库构建的交互式学习平台，帮助 AI 产品经理求职者系统学习、刷题和自测。
 
